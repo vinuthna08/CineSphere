@@ -3,17 +3,19 @@ import axios from "axios";
 
 const router = express.Router();
 
-// 🇮🇳 Indian Movies
+/**
+ * 🇮🇳 Indian Movies (Popular in India)
+ * GET /api/movies/indian
+ */
 router.get("/indian", async (req, res) => {
   try {
     const response = await axios.get(
-      "https://api.themoviedb.org/3/discover/movie",
+      "https://api.themoviedb.org/3/movie/popular",
       {
         params: {
           api_key: process.env.TMDB_API_KEY,
           region: "IN",
-          with_origin_country: "IN",
-          sort_by: "popularity.desc",
+          language: "en-IN",
           page: 1
         }
       }
@@ -21,20 +23,23 @@ router.get("/indian", async (req, res) => {
 
     res.status(200).json(response.data.results);
   } catch (error) {
+    console.error("TMDB ERROR:", error.response?.data || error.message);
     res.status(500).json({ message: "Failed to fetch Indian movies" });
   }
 });
 
-// 🇺🇸 English Movies
+/**
+ * 🇺🇸 English Movies (Popular)
+ * GET /api/movies/english
+ */
 router.get("/english", async (req, res) => {
   try {
     const response = await axios.get(
-      "https://api.themoviedb.org/3/discover/movie",
+      "https://api.themoviedb.org/3/movie/popular",
       {
         params: {
           api_key: process.env.TMDB_API_KEY,
-          with_original_language: "en",
-          sort_by: "popularity.desc",
+          language: "en-US",
           page: 1
         }
       }
@@ -42,6 +47,7 @@ router.get("/english", async (req, res) => {
 
     res.status(200).json(response.data.results);
   } catch (error) {
+    console.error("TMDB ERROR:", error.response?.data || error.message);
     res.status(500).json({ message: "Failed to fetch English movies" });
   }
 });
