@@ -78,12 +78,21 @@ router.get("/search", async (req, res) => {
       }
     );
 
-    res.status(200).json(response.data.results);
+    // ✅ Filter & clean results
+    const filteredMovies = response.data.results.filter(
+      movie =>
+        movie.poster_path &&
+        movie.release_date &&
+        movie.vote_count > 50
+    );
+
+    res.status(200).json(filteredMovies);
   } catch (error) {
     console.error("TMDB ERROR:", error.response?.data || error.message);
     res.status(500).json({ message: "Failed to search movies" });
   }
 });
+
 
 /**
  Movie Details by ID
